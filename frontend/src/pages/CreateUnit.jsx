@@ -4,6 +4,28 @@ import api from "../api";
 
 const amenityOptions = ["", "Parking", "Electricity", "Maintenance", "Water", "Internet", "Other"];
 
+const AmenityRow = ({ label, value, onChange, expense, onExpenseChange }) => (
+	<div style={{display:'grid', gridTemplateColumns:'1fr 120px', gap:'0.75rem', marginBottom:'0.75rem'}}>
+		<select value={value} onChange={e => onChange(e.target.value)}>
+			{amenityOptions.map(opt => (
+				<option key={opt} value={opt}>{opt || `Select ${label}`}</option>
+			))}
+		</select>
+		<input 
+			type="number" 
+			value={expense} 
+			onChange={e => {
+				const v = e.target.value;
+				if (String(v) !== String(expense)) onExpenseChange(v);
+			}} 
+			placeholder="Cost"
+			disabled={!value}
+			autoComplete="off"
+			style={{ imeMode: 'auto' }}
+		/>
+	</div>
+);
+
 export default function CreateUnit(){
 	const { id } = useParams();
 	const [number, setNumber] = useState("");
@@ -60,25 +82,6 @@ export default function CreateUnit(){
 			setLoading(false);
 		}
 	};
-
-	const AmenityRow = ({ label, value, onChange, expense, onExpenseChange }) => (
-		<div style={{display:'grid', gridTemplateColumns:'1fr 120px', gap:'0.75rem', marginBottom:'0.75rem'}}>
-			<select value={value} onChange={e => onChange(e.target.value)}>
-				{amenityOptions.map(opt => (
-					<option key={opt} value={opt}>{opt || `Select ${label}`}</option>
-				))}
-			</select>
-			<input 
-				type="number" 
-				value={expense} 
-				onChange={e => onExpenseChange(e.target.value)} 
-				placeholder="Cost"
-				disabled={!value}
-				autoComplete="off"
-				style={{ imeMode: 'auto' }}
-			/>
-		</div>
-	);
 
 	// New state for photos and additional info
 	const [photos, setPhotos] = useState([]);
