@@ -1,0 +1,191 @@
+/* Simple navbar styles for ForRentAll */
+.fr-navbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:0.75rem;
+  padding:0 1rem;
+  height:80px;
+  background:#ffffff;
+  position:relative;
+  z-index:10;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+div.left{
+  display:flex;
+  align-items:center;
+  gap:0.75rem;
+}
+
+div.right{
+  display:flex;
+  align-items:center;
+  gap:0.75rem;
+}
+
+.fr-navbar__brand{
+  font-weight:700;
+  font-size:1.5rem;
+  color:#111827;
+  margin-left:8px;
+}
+
+.fr-navbar__links{
+  list-style:none;
+  display:flex;
+  gap:1rem;
+  margin:0;
+  padding:0;
+  align-items:center;
+}
+
+/* Toggle (hamburger) */
+.fr-navbar__toggle{
+  background:transparent;
+  border:0;
+  padding:8px;
+  cursor:pointer;
+  width:50px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  order:1;
+}
+/* keep toggle fully transparent on hover/focus/active */
+.fr-navbar__toggle:hover,
+.fr-navbar__toggle:focus,
+.fr-navbar__toggle:active{
+  background: transparent;
+  outline: none;
+}
+
+.fr-navbar__hamburger{
+  display:block;
+  width:22px;
+  height:2px;
+  background: #374151;
+  position:relative;
+  border-radius:2px;
+}
+.fr-navbar__hamburger::before,
+.fr-navbar__hamburger::after{
+  content:'';
+  position:absolute;
+  left:0;
+  width:22px;
+  height:2px;
+  background:#374151;
+  border-radius:2px;
+}
+.fr-navbar__hamburger::before{ top:-8px }
+.fr-navbar__hamburger::after{ top:8px }
+.fr-navbar__hamburger.open{ background:transparent }
+.fr-navbar__hamburger.open::before{ top:0; transform:rotate(45deg) }
+.fr-navbar__hamburger.open::after{ top:0; transform:rotate(-45deg) }
+
+.fr-navbar__links{
+  list-style:none;
+  display:flex;
+  gap:1rem;
+  margin:0;
+  padding:0;
+  align-items:center;
+  order:3;
+  margin-left: auto;
+}
+.fr-navbar__links a{
+  text-decoration:none;
+  color:#000;
+  padding:0.5rem 0.5rem;
+  border-radius:6px;
+  transition: color .15s;
+}
+
+.fr-navbar__links a:hover{
+  color:#0e7490; /* blue on hover */
+  background: transparent;
+}
+.fr-navbar__login{
+  font-weight:600;
+  color:#000;
+  padding:0.4rem 0.7rem;
+  background:transparent;
+  transition: color .15s;
+}
+.fr-navbar__login:hover{
+  color:#0e7490;
+}
+
+/* ensure no underline on login (and remove on hover) */
+.fr-navbar__login,
+.fr-navbar__login:hover {
+  text-decoration: none;
+}
+.fr-navbar__profile{
+  position:relative;
+}
+.fr-navbar__profile-dropdown{
+  display:none;
+  position:absolute;
+  right:0;
+  top: calc(100% + 8px);
+  background:#fff;
+  box-shadow:0 8px 24px rgba(2,6,23,0.08);
+  border-radius:8px;
+  overflow:hidden;
+  min-width:140px;
+  z-index:40;
+}
+.fr-navbar__profile-dropdown.open{ display:block }
+.fr-navbar__profile-dropdown button{
+  width:100%;
+  padding:10px 12px;
+  text-align:left;
+  border:0;
+  background:transparent;
+  cursor:pointer;
+  color: #000;
+  font-weight: 400;
+}
+
+.fr-navbar__profile-dropdown button:hover{ background:#f8fafc }
+
+/* Actions (login / avatar) - always visible */
+.fr-navbar__actions{
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+  margin-left: 0;
+  order:4;
+}
+
+@media (max-width:740px){
+  .fr-navbar__toggle{ display:flex; order:1 }
+  /* brand sits after toggle */
+  .fr-navbar__brand{ order:2 }
+  .fr-navbar__links{ order:3 }
+  .fr-navbar__actions{ order:4 }
+  .fr-navbar__links{display:none}
+  .fr-navbar__links.open{
+    display:flex;
+    position:absolute;
+    top:100%;
+    right:0;
+    left:0;
+    background:#fff;
+    flex-direction:column;
+    gap:0.25rem;
+    padding:1rem;
+    box-shadow:0 8px 32px rgba(2,6,23,0.08);
+    z-index:30;
+  }
+  .fr-navbar__links li{ width:100% }
+  .fr-navbar__links a{ display:block; width:100%; padding:0.75rem 1rem }
+}
+
+/* Ensure hamburger is hidden on larger screens */
+@media (min-width:741px){
+  .fr-navbar__toggle{ display: none !important }
+}

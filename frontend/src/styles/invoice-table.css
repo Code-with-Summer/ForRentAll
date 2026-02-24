@@ -1,0 +1,10 @@
+.invoice-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.invoice-table-wrapper table {
+  min-width: 800px;
+  width: 100%;
+  border-collapse: collapse;
+}

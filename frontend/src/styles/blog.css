@@ -1,0 +1,5 @@
+.bd-image{display:block;margin:0 auto;width:60%;max-width:100%;height:auto;border-radius:6px}
+
+@media (max-width:740px){
+  .bd-image{width:100%;max-width:100%}
+}
