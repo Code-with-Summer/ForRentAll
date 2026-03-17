@@ -1,0 +1,150 @@
+import { useState } from "react";
+import api from "../api";
+import { useNavigate } from "react-router-dom";
+import { getAllStates, getDistricts } from "india-state-district";
+
+export default function CreateProperty(){
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [state, setState] = useState("");
+  const [stateCode, setStateCode] = useState("");
+  const [city, setCity] = useState("");
+  const [area, setArea] = useState("");
+  const [images, setImages] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const nav = useNavigate();
+
+  const indianStates = getAllStates();
+  const citiesForState = stateCode ? getDistricts(stateCode) : [];
+
+  const submit = async (e) => {
+    e.preventDefault();
+    try {
+      setError(null);
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("address", address);
+      formData.append("state", state);
+      formData.append("city", city);
+      formData.append("area", area);
+      for (let i = 0; i < images.length; i++) {
+        formData.append("images", images[i]);
+      }
+      await api.post("/property", formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
+      nav("/dashboard");
+    } catch (err) {
+      console.error(err);
+      setError(err?.response?.data?.error || err.message || "Failed to create property");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="page-container form-container mobile-links-page">
+      <div className="page-header">
+        <h1 className="page-title">Create Property</h1>
+        <p className="page-subtitle">Add a new property to your portfolio</p>
+      </div>
+      
+      <form onSubmit={submit}>
+        <div className="form-group">
+          <label className="form-label">Property Name</label>
+          <input 
+            placeholder="e.g., Sunrise Apartments" 
+            value={name} 
+            onChange={e => setName(e.target.value)}
+            required
+          />
+        </div>
+        
+        <div className="form-group">
+          <label className="form-label">Full Address</label>
+          <input 
+            placeholder="e.g., 123 Main Street" 
+            value={address} 
+            onChange={e => setAddress(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">State</label>
+          <select
+            value={stateCode}
+            onChange={e => {
+              const code = e.target.value;
+              const selectedState = indianStates.find((s) => s.code === code);
+              setStateCode(code);
+              setState(selectedState?.name || "");
+              setCity("");
+            }}
+            required
+          >
+            <option value="">Select State / Union Territory</option>
+            {indianStates.map(s => (
+              <option key={s.code} value={s.code}>{s.name}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">City / District</label>
+          <select
+            value={city}
+            onChange={e => setCity(e.target.value)}
+            required
+            disabled={!stateCode}
+          >
+            <option value="">{stateCode ? "Select District" : "Select State first"}</option>
+            {citiesForState.map(c => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Area / Locality</label>
+          <input
+            placeholder="e.g., Andheri West"
+            value={area}
+            onChange={e => setArea(e.target.value)}
+            required
+          />
+        </div>
+        
+        <div className="form-group">
+          <label className="form-label">Property Images (max 15)</label>
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={e => {
+              const files = Array.from(e.target.files);
+              if (files.length > 15) {
+                alert('You can upload up to 15 images only.');
+                setImages(files.slice(0, 15));
+              } else {
+                setImages(files);
+              }
+            }}
+          />
+        </div>
+        <div className="form-actions create-property-actions">
+          <button type="submit" disabled={loading}>
+            {loading ? 'Creating...' : 'Create Property'}
+          </button>
+          <button type="button" className="btn-secondary" onClick={() => nav(-1)}>
+            Cancel
+          </button>
+        </div>
+        
+        {error && <div className="error-msg">{error}</div>}
+      </form>
+    </div>
+  );
+}
